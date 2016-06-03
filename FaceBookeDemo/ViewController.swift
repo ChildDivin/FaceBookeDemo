@@ -18,7 +18,7 @@ class ViewController: UIViewController ,FBSDKLoginButtonDelegate {
             let loginView : FBSDKLoginButton = FBSDKLoginButton()
             self.view.addSubview(loginView)
             loginView.center = self.view.center
-            loginView.readPermissions = ["public_profile", "email", "user_friends"]
+            loginView.publishPermissions = ["publish_actions"]
             loginView.delegate = self
     }
 
@@ -83,6 +83,22 @@ class ViewController: UIViewController ,FBSDKLoginButtonDelegate {
                 }
             })
 
+        }
+        else
+        {
+            let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "me/permissions/publish_actions", parameters:nil,HTTPMethod: "DELETE")
+            graphRequest.startWithCompletionHandler({ (connection, result, error) -> Void in
+                if (error == nil) {
+                    print(result)
+                    let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "me/feed", parameters:["message": "hello world"],HTTPMethod: "POST")
+                    graphRequest.startWithCompletionHandler({ (connection, result, error) -> Void in
+                        if (error == nil) {
+                            print(result)
+                        }
+                    })
+                    
+                }
+            })
         }
     }
 }
